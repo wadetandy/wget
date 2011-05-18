@@ -276,6 +276,8 @@ static struct cmdline_option option_data[] =
 #ifdef USE_WATT32
     { "wdebug", 0, OPT_BOOLEAN, "wdebug", -1 },
 #endif
+    /* custom functionality for mapping linkages within and between sites */
+    { "linkmap-file", 0, OPT_VALUE, "linkmapfile", -1 },
   };
 
 #undef WHEN_DEBUG
@@ -1225,6 +1227,64 @@ WARNING: Can't reopen standard output in binary mode;\n\
   else if (output_stream != stdout)
     {
       set_ods5_dest( opt.output_document);
+    }
+#endif /* def __VMS */
+
+  /* check to see if we can open and write to the file for linkmapping */
+  if (opt.linkmap_file)
+    {
+      if (HYPHENP (opt.linkmap_file))
+        {
+#ifdef WINDOWS
+          FILE *result;
+          result = freopen ("CONOUT$", "wb", stdout);
+          if (result == NULL)
+            {
+              logputs (LOG_NOTQUIET, _("\
+WARNING: Can't reopen standard output in binary mode;\n\
+         downloaded file may contain inappropriate line endings.\n"));
+            }
+#endif
+          linkmap_stream = stdout;
+        }
+      else
+        {
+          struct_fstat st;
+
+#ifdef __VMS
+/* Common fopen() optional arguments:
+   sequential access only, access callback function.
+*/
+# define FOPEN_OPT_ARGS , "fop=sqo", "acc", acc_cb, &open_id
+          int open_id = 7;
+#else /* def __VMS */
+# define FOPEN_OPT_ARGS
+#endif /* def __VMS [else] */
+
+          linkmap_stream = fopen (opt.linkmap_file,
+                                 opt.always_rest ? "ab" : "wb"
+                                 FOPEN_OPT_ARGS);
+          if (linkmap_stream == NULL)
+            {
+              perror (opt.linkmap_file);
+              exit (1);
+            }
+          if (fstat (fileno (linkmap_stream), &st) == 0 && S_ISREG (st.st_mode))
+            linkmap_stream_regular = true;
+        }
+    }
+
+#ifdef __VMS
+  /* Set global ODS5 flag according to the specified destination (if
+     any), otherwise according to the current default device.
+  */
+  if (linkmap_stream == NULL)
+    {
+      set_ods5_dest( "SYS$DISK");
+    }
+  else if (linkmap_stream != stdout)
+    {
+      set_ods5_dest( opt.linkmap_file);
     }
 #endif /* def __VMS */
 

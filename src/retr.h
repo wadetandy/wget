@@ -39,6 +39,8 @@ extern SUM_SIZE_INT total_downloaded_bytes;
 extern double total_download_time;
 extern FILE *output_stream;
 extern bool output_stream_regular;
+extern FILE *linkmap_stream;
+extern bool linkmap_stream_regular;
 
 /* Flags for fd_read_body. */
 enum {

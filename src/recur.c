@@ -411,6 +411,12 @@ retrieve_tree (struct url *start_url_parsed, struct iri *pi)
                          same URL twice.  */
                       string_set_add (blacklist, child->url->url);
                     }
+
+                  /* If a linkmap file has been specified, add the url to our the map */
+                  if (opt.linkmap_file && referer_url)
+                    {
+                      fprintf(linkmap_stream, "%s,%s\n", referer_url, child->url->url);
+                    }
                 }
 
               if (strip_auth)

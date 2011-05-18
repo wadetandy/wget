@@ -184,6 +184,7 @@ static const struct {
   { "iri",              &opt.enable_iri,        cmd_boolean },
   { "keepsessioncookies", &opt.keep_session_cookies, cmd_boolean },
   { "limitrate",        &opt.limit_rate,        cmd_bytes },
+  { "linkmapfile",      &opt.linkmap_file,      cmd_file },
   { "loadcookies",      &opt.cookies_input,     cmd_file },
   { "localencoding",    &opt.locale,            cmd_string },
   { "logfile",          &opt.lfilename,         cmd_file },

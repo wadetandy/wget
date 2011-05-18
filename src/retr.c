@@ -68,6 +68,15 @@ FILE *output_stream;
 /* Whether output_document is a regular file we can manipulate,
    i.e. not `-' or a device file. */
 bool output_stream_regular;
+
+/* If non-NULL, the stream to which the linkmap should be written.  This
+   stream is initialized when `--linkmap-file' is used.  */
+FILE *linkmap_stream;
+
+/* Whether linkmap_file is a regular file we can manipulate,
+   i.e. not `-' or a device file. */
+bool linkmap_stream_regular;
+
 
 static struct {
   wgint chunk_bytes;

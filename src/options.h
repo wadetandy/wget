@@ -246,6 +246,7 @@ struct options
   int ftp_stmlf;                /* Force Stream_LF format for binary FTP. */
 #endif /* def __VMS */
 
+  char *linkmap_file;           /* The location to write the linkmap csv file */
 };
 
 extern struct options opt;
