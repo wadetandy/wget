@@ -415,7 +415,7 @@ retrieve_tree (struct url *start_url_parsed, struct iri *pi)
                   /* If a linkmap file has been specified, add the url to our the map */
                   if (opt.linkmap_file && referer_url)
                     {
-                      fprintf(linkmap_stream, "%s,%s\n", referer_url, child->url->url);
+                      fprintf(linkmap_stream, "%s,%s,%s,%s\n", url_parsed->host, url_parsed->url ,child->url->host, child->url->url);
                     }
                 }
 
